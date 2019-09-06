@@ -51,9 +51,6 @@ public class DatabaseCli {
             }
         }
 
-
-        Class.forName(driverClass);
-
         Connection con = null;
         try {
             con = DriverManager.getConnection(url, username, password);
