@@ -1,5 +1,6 @@
-package com.crabware.techtest.databasecli;
+package com.crabware.techtest.databasecli.display;
 
+import com.crabware.techtest.databasecli.ResultSetMock;
 import com.crabware.techtest.databasecli.display.Display;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;

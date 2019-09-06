@@ -1,8 +1,11 @@
 package com.crabware.techtest.databasecli;
 
+import org.mockito.stubbing.Answer;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
 
@@ -38,8 +41,16 @@ public class ResultSetMock {
         });
         when(resultSet.getMetaData()).thenReturn(metaData);
         when(resultSet.getString(anyInt())).thenAnswer(invocation -> data[cursor][(int) invocation.getArguments()[0] - 1]);
-        // TODO fix
-        when(resultSet.beforeFirst()).thenAnswer(invocation -> cursor = -1);
+        when(resultSet.getString(anyString())).thenAnswer(invocation -> {
+            String header = (String) invocation.getArguments()[0];
+            int column = Arrays.asList(columnNames).indexOf(header);
+            return data[cursor][column];
+        });
+
+        doAnswer(invocation -> {
+            cursor = -1;
+            return null;
+        }).when(resultSet).beforeFirst();
 
         return resultSet;
     }
