@@ -49,7 +49,7 @@ public class QueryResult {
             for (String header : headers) {
                 String data = resultSet.getString(header);
                 row.put(header, data);
-                if (data.length() > columnWidths.get(header)) {
+                if (data != null && data.length() > columnWidths.get(header)) {
                     columnWidths.put(header, data.length());
                 }
             }

@@ -1,13 +1,10 @@
 package com.crabware.techtest.databasecli.display;
 
 import com.crabware.techtest.databasecli.ResultSetMock;
-import com.crabware.techtest.databasecli.display.Display;
+import com.crabware.techtest.databasecli.database.QueryResult;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
@@ -26,14 +23,15 @@ public class TestDisplay {
                 new String[]{"John Bon", "34", "78"},
                 new String[]{"Marks Getsetgo", "19", "103"},
                 new String[]{"Joe King", "27", "192"},
-                new String[]{"Phil Lanthropy", "56", "96"},
+                new String[]{"Phil Lanthropy", null, "96"},
         };
 
         ResultSet resultSet = ResultSetMock.create(columnNames, data);
+        QueryResult queryResult = QueryResult.from(resultSet);
 
-        String rendered = Display.render(resultSet);
+        String rendered = Display.render(queryResult, columnNames);
         System.out.println(rendered);
-        String[] split = rendered.split("\\\n");
+        String[] split = rendered.split(System.lineSeparator());
         assertEquals("name            age  weight  ", split[0]);
         assertEquals("John Bon        34   78      ", split[1]);
         assertEquals("Marks Getsetgo  19   103     ", split[2]);

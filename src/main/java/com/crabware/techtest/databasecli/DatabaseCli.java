@@ -1,5 +1,6 @@
 package com.crabware.techtest.databasecli;
 
+import com.crabware.techtest.databasecli.database.QueryResult;
 import com.crabware.techtest.databasecli.display.Display;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class DatabaseCli {
             Statement statement = con.createStatement();
             ResultSet results = statement.executeQuery("select * from foodmart.employee");
 
-            System.out.println(Display.render(results));
+            System.out.println(Display.render(QueryResult.from(results)));
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,46 +1,35 @@
 package com.crabware.techtest.databasecli.display;
 
-import java.sql.ResultSet;
+import com.crabware.techtest.databasecli.database.QueryResult;
+
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Display {
     private static final int PADDING = 2;
 
-    public static String render(ResultSet resultSet) throws SQLException {
-        int columnCount = resultSet.getMetaData().getColumnCount();
+    public static String render(QueryResult queryResult, String[] orderedHeaders) throws SQLException {
         StringBuilder buf = new StringBuilder();
-        Map<Integer, Integer> columnWidths = new HashMap<>();
 
-        for (int col = 1; col < columnCount + 1; col++) {
-            columnWidths.put(col, resultSet.getMetaData().getColumnName(col).length());
+        for (String header : orderedHeaders) {
+            buf.append(rightPad(header, queryResult.getColumnWidth(header) + PADDING));
         }
+        buf.append(System.lineSeparator());
 
-        while (resultSet.next()) {
-            for (int col = 1; col < columnCount + 1; col++) {
-                String data = resultSet.getString(col);
-                if (data != null && data.length() > columnWidths.get(col)) {
-                    columnWidths.put(col, data.length());
-                }
+        for (Map<String, String> row : queryResult.getRows()) {
+            for (String header : orderedHeaders) {
+                buf.append(rightPad(row.get(header), queryResult.getColumnWidth(header) + PADDING));
             }
+            buf.append(System.lineSeparator());
         }
 
-        resultSet.beforeFirst();
-
-        for (int col = 1; col < columnCount + 1; col++) {
-            buf.append(rightPad(resultSet.getMetaData().getColumnName(col), columnWidths.get(col) + PADDING));
-        }
-        buf.append("\n");
-
-        while (resultSet.next()) {
-            for (int col = 1; col < columnCount + 1; col++) {
-                buf.append(rightPad(resultSet.getString(col), columnWidths.get(col) + PADDING));
-            }
-            buf.append("\n");
-        }
         return buf.toString();
     }
+
+    public static String render(QueryResult queryResult) throws SQLException {
+        return render(queryResult, queryResult.getHeaders().toArray(new String[0]));
+    }
+
 
     public static String rightPad(String s, int length) {
         StringBuilder buf = new StringBuilder();
