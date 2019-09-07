@@ -18,12 +18,12 @@ import static org.mockito.Mockito.when;
 
 public class TestFoodMartHelper {
     @Test
-    public void getInfo() throws SQLException {
+    public void getEmployeesReturnsResultQuery() throws SQLException {
         String[] columnNames = new String[]{"name", "age", "weight"};
         String[][] data = new String[][]{
                 new String[]{"Jack Top", "34", "78"},
                 new String[]{"Milly Sanders", "19", "103"},
-                new String[]{"Hugh Jarse", "27", "192"}
+                new String[]{"Hugh Jarms", "27", "192"}
         };
         ResultSet resultSet = ResultSetMock.create(columnNames, data);
 
@@ -43,5 +43,12 @@ public class TestFoodMartHelper {
         String educationLevel = "";
         QueryResult queryResult = helper.getEmployees(department, payType, educationLevel);
         assertEquals(new HashSet<>(Arrays.asList(new String[]{"name", "age", "weight"})), queryResult.getHeaders());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullStringsNowAllowed() throws SQLException {
+        Database database = Database.from("url", "usermame", "password", new DriverManagerConnectionSource());
+        FoodMartHelper helper = FoodMartHelper.from(database);
+        helper.getEmployees("department id", "pay type", null);
     }
 }

@@ -12,12 +12,12 @@ import static org.junit.Assert.assertEquals;
 public class TestDisplay {
 
     @Test
-    public void rightPad() {
+    public void correctPaddingAddedToString() {
         assertEquals("123  ", Display.rightPad("123", 5));
     }
 
     @Test
-    public void render() throws SQLException {
+    public void queryResultRenderedToString() throws SQLException {
         String[] columnNames = new String[]{"name", "age", "weight"};
         String[][] data = new String[][]{
                 new String[]{"John Bon", "34", "78"},
@@ -30,7 +30,6 @@ public class TestDisplay {
         QueryResult queryResult = QueryResult.from(resultSet);
 
         String rendered = Display.render(queryResult, columnNames);
-        System.out.println(rendered);
         String[] split = rendered.split(System.lineSeparator());
         assertEquals("name            age  weight  ", split[0]);
         assertEquals("John Bon        34   78      ", split[1]);

@@ -20,6 +20,10 @@ public class FoodMartHelper {
     }
 
     public QueryResult getEmployees(String department, String payType, String educationLevel) throws SQLException {
+        if (department == null || payType == null || educationLevel == null) {
+            String args = "department=" + department + ", payType=" + payType + ", educationLevel=" + educationLevel;
+            throw new IllegalArgumentException("Arguments must not be null, supplied arguments: " + args);
+        }
         String[] params = new String[]{department, payType, educationLevel};
         return database.executeStatement(EMPLOYEES_QUERY, params);
     }
