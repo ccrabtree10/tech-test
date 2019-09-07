@@ -3,6 +3,7 @@ package com.crabware.techtest.databasecli.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 public class Database {
     private final String url;
@@ -31,16 +32,23 @@ public class Database {
     }
 
     public QueryResult executeStatement(String query, String[] params) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement(query, params);
+        // Construct the prepared statement and populate with the supplied parameters
+        PreparedStatement stmt = connection.prepareStatement(query);
+        for (int i = 0; i < params.length; i++) {
+            stmt.setString(i + 1, params[i]);
+        }
+
         QueryResult queryResult = null;
         try {
             stmt.execute();
+            // Build the query result before we close the statement otherwise getResultSet will throw an exception
             queryResult = QueryResult.from(stmt.getResultSet());
         } finally {
             stmt.close();
         }
         return queryResult;
     }
+
 
     public static Database from(String url, String username, String password, ConnectionSource connectionSource) {
         return new Database(url, username, password, connectionSource);

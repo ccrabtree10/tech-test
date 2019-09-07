@@ -31,7 +31,7 @@ public class TestFoodMartHelper {
         ConnectionSource connectionSource = mock(ConnectionSource.class);
         PreparedStatement stmt = mock(PreparedStatement.class);
         when(connectionSource.getConnection("url", "user", "pass")).thenReturn(connection);
-        when(connection.prepareStatement(anyString(), any(String[].class))).thenReturn(stmt);
+        when(connection.prepareStatement(anyString())).thenReturn(stmt);
         when(stmt.getResultSet()).thenReturn(resultSet);
 
         Database db = Database.from("url", "user", "pass", connectionSource);

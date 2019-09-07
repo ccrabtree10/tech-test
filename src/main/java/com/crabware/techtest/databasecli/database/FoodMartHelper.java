@@ -4,7 +4,16 @@ import java.sql.SQLException;
 
 public class FoodMartHelper {
     private final Database database;
-    private static final String EMPLOYEES_QUERY = "select * from foodmart.employee";
+    private static final String EMPLOYEES_QUERY = "SELECT * " +
+            "FROM foodmart.employee e " +
+            "    INNER JOIN foodmart.department d " +
+            "        on d.department_id = e.department_id " +
+            "    INNER JOIN foodmart.position p " +
+            "        on p.position_id = e.position_id " +
+            "WHERE " +
+            "    d.department_id = ? " +
+            "    AND p.pay_type = ? " +
+            "    AND e.education_level = ? ";
 
     private FoodMartHelper(Database database) {
         this.database = database;

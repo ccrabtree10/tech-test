@@ -33,6 +33,7 @@ public class DatabaseCli {
     }
 
     public static void main(String[] args) {
+        args = new String[]{"1", "Monthly", "Graduate Degree"};
         DatabaseCli databaseCli = new DatabaseCli(args);
         databaseCli.run();
     }
