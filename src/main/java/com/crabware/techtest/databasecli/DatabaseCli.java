@@ -19,13 +19,11 @@ public class DatabaseCli {
     private static final String PROPERTY_URL = "database.url";
     private static final String PROPERTY_USERNAME = "database.username";
     private static final String PROPERTY_PASSWORD = "database.password";
-    private static final String PROPERTY_DRIVER_CLASS = "database.driverClass";
-    private static final String USAGE = "Usage: <java> DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
+    private static final String USAGE = "Usage: <java> " + DatabaseCli.class.getName() + " DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
     private final String[] args;
     private String department;
     private String payType;
     private String educationLevel;
-    private Properties properties;
     private String url = null;
     private String username = null;
     private String password = null;
@@ -51,7 +49,7 @@ public class DatabaseCli {
         } catch (PropertiesException pe) {
             printAndExit("Error loading properties: " + pe.getMessage());
         } catch (ArgumentException ae) {
-            printAndExit("Error parsing arguments: " + ae.getMessage());
+            printAndExit("Error parsing arguments: " + ae.getMessage() + System.lineSeparator() + USAGE);
         }
 
         Database database = Database.from(url, username, password, new DriverManagerConnectionSource());
@@ -81,7 +79,7 @@ public class DatabaseCli {
         if (propertiesStream == null) {
             throw new PropertiesException("Could not find " + DEFAULT_PROPERTIES_FILENAME + " on class path");
         } else {
-            properties = new Properties();
+            Properties properties = new Properties();
             try {
                 properties.load(propertiesStream);
                 url = properties.getProperty(PROPERTY_URL);
@@ -91,7 +89,7 @@ public class DatabaseCli {
                     StringBuilder message = new StringBuilder();
                     message.append("One of the required properties is null:\n");
 
-                    for (String prop : new String[]{PROPERTY_URL, PROPERTY_USERNAME, PROPERTY_DRIVER_CLASS}) {
+                    for (String prop : new String[]{PROPERTY_URL, PROPERTY_USERNAME}) {
                         message.append(prop + "=" + properties.get(prop) + "\n");
                     }
 

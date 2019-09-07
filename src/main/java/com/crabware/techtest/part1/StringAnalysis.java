@@ -2,6 +2,8 @@ package com.crabware.techtest.part1;
 
 public class StringAnalysis {
 
+    private StringAnalysis() {}
+
     public static int findDifferences(String s1, String s2) {
         if (s1 == null || s2 == null) {
             throw new IllegalArgumentException("Strings must not be null. s1=" + s1 + ", s2=" + s2);

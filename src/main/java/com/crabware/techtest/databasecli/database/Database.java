@@ -32,8 +32,14 @@ public class Database {
 
     public QueryResult executeStatement(String query, String[] params) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query, params);
-        stmt.execute();
-        return QueryResult.from(stmt.getResultSet());
+        QueryResult queryResult = null;
+        try {
+            stmt.execute();
+            queryResult = QueryResult.from(stmt.getResultSet());
+        } finally {
+            stmt.close();
+        }
+        return queryResult;
     }
 
     public static Database from(String url, String username, String password, ConnectionSource connectionSource) {
