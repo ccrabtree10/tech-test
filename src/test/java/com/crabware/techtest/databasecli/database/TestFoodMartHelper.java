@@ -16,10 +16,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 public class TestFoodMartHelper {
-
-
     @Test
     public void getInfo() throws SQLException {
         String[] columnNames = new String[]{"name", "age", "weight"};

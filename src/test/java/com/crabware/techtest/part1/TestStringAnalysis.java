@@ -21,10 +21,14 @@ public class TestStringAnalysis {
         assertEquals(0, StringAnalysis.findDifferences(LONG_STRING, S2));
     }
 
-    @Test
-    public void t() {
-
+    @Test(expected = IllegalArgumentException.class)
+    public void nullStringArg1() {
+        StringAnalysis.findDifferences(null, S1);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void nullStringArg2() {
+        StringAnalysis.findDifferences(S1, null);
+    }
 
 }
