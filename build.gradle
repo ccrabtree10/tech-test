@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'crabware'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 sourceCompatibility = 1.8
 
@@ -11,12 +11,22 @@ repositories {
     mavenCentral()
 }
 
+task databaseCliJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.crabware.techtest.databasecli.DatabaseCli'
+    }
+    baseName = 'dbcli'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    from(sourceSets.main.output) {
+        include "com/crabware/techtest/databasecli/**"
+    }
+}
+
 dependencies {
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.21'
-
-    // https://mvnrepository.com/artifact/commons-cli/commons-cli
-    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.mockito:mockito-core:2.+"
