@@ -8,7 +8,7 @@ import java.util.*;
 public class Display {
     private static final int PADDING = 2;
 
-    public static String render(QueryResult queryResult, String[] orderedHeaders) throws SQLException {
+    public static String render(QueryResult queryResult, String[] orderedHeaders) {
         StringBuilder output = new StringBuilder();
 
         for (String header : orderedHeaders) {
@@ -26,7 +26,7 @@ public class Display {
         return output.toString();
     }
 
-    public static String render(QueryResult queryResult) throws SQLException {
+    public static String render(QueryResult queryResult) {
         return render(queryResult, queryResult.getHeaders().toArray(new String[0]));
     }
 
