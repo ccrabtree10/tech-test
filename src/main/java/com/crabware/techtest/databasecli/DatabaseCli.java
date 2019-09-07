@@ -34,15 +34,15 @@ public class DatabaseCli {
                 password = props.getProperty(PROPERTY_PASSWORD);
                 driverClass = props.getProperty(PROPERTY_DRIVER_CLASS);
                 if (Arrays.asList(url, username, password, driverClass).contains(null)) {
-                    StringBuilder buf = new StringBuilder();
-                    buf.append("One of the required properties is null:\n");
+                    StringBuilder message = new StringBuilder();
+                    message.append("One of the required properties is null:\n");
 
                     for (String prop : new String[]{PROPERTY_URL, PROPERTY_USERNAME, PROPERTY_DRIVER_CLASS}) {
-                        buf.append(prop + "=" + props.get(prop) + "\n");
+                        message.append(prop + "=" + props.get(prop) + "\n");
                     }
 
-                    buf.append(PROPERTY_PASSWORD + "=" + (password == null ? password : "<removed>") + "\n");
-                    System.out.println(buf);
+                    message.append(PROPERTY_PASSWORD + "=" + (password == null ? password : "<removed>") + "\n");
+                    System.out.println(message);
                     System.exit(1);
                 }
             } catch (IOException e) {

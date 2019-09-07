@@ -9,21 +9,21 @@ public class Display {
     private static final int PADDING = 2;
 
     public static String render(QueryResult queryResult, String[] orderedHeaders) throws SQLException {
-        StringBuilder buf = new StringBuilder();
+        StringBuilder output = new StringBuilder();
 
         for (String header : orderedHeaders) {
-            buf.append(rightPad(header, queryResult.getColumnWidth(header) + PADDING));
+            output.append(rightPad(header, queryResult.getColumnWidth(header) + PADDING));
         }
-        buf.append(System.lineSeparator());
+        output.append(System.lineSeparator());
 
         for (Map<String, String> row : queryResult.getRows()) {
             for (String header : orderedHeaders) {
-                buf.append(rightPad(row.get(header), queryResult.getColumnWidth(header) + PADDING));
+                output.append(rightPad(row.get(header), queryResult.getColumnWidth(header) + PADDING));
             }
-            buf.append(System.lineSeparator());
+            output.append(System.lineSeparator());
         }
 
-        return buf.toString();
+        return output.toString();
     }
 
     public static String render(QueryResult queryResult) throws SQLException {
@@ -32,12 +32,12 @@ public class Display {
 
 
     public static String rightPad(String s, int length) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(s);
-        while(buf.length() < length) {
-            buf.append(' ');
+        StringBuilder output = new StringBuilder();
+        output.append(s);
+        while(output.length() < length) {
+            output.append(' ');
         }
-        return buf.toString();
+        return output.toString();
     }
 
 }
