@@ -3,7 +3,6 @@ package com.crabware.techtest.databasecli.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.function.Function;
 
 public class Database {
     private final String url;

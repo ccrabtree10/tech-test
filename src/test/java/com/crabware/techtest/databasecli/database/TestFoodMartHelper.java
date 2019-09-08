@@ -2,16 +2,12 @@ package com.crabware.techtest.databasecli.database;
 
 import com.crabware.techtest.databasecli.ResultSetMock;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.*;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -42,7 +38,7 @@ public class TestFoodMartHelper {
         String payType = "";
         String educationLevel = "";
         QueryResult queryResult = helper.getEmployees(department, payType, educationLevel);
-        assertEquals(new HashSet<>(Arrays.asList(new String[]{"name", "age", "weight"})), queryResult.getHeaders());
+        assertEquals(new HashSet<>(Arrays.asList("name", "age", "weight")), queryResult.getHeaders());
     }
 
     @Test(expected = IllegalArgumentException.class)

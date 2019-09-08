@@ -37,11 +37,6 @@ public class DatabaseCli {
         databaseCli.run();
     }
 
-    public static void printAndExit(String string) {
-        System.out.println(string);
-        System.exit(1);
-    }
-
     public void run() {
         try {
             loadProperties();
@@ -74,7 +69,7 @@ public class DatabaseCli {
         }
     }
 
-    protected void loadProperties() throws PropertiesException {
+    private void loadProperties() throws PropertiesException {
         InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
         if (propertiesStream == null) {
             throw new PropertiesException("Could not find " + DEFAULT_PROPERTIES_FILENAME + " on class path");
@@ -102,7 +97,7 @@ public class DatabaseCli {
         }
     }
 
-    protected void parseArgs() throws ArgumentException {
+    private void parseArgs() throws ArgumentException {
         if (args.length < 3) {
             throw new ArgumentException("Expecting 3 arguments, only " + args.length + " supplied");
         }
@@ -112,7 +107,8 @@ public class DatabaseCli {
         educationLevel = args[2];
     }
 
-
-
-
+    private static void printAndExit(String string) {
+        System.out.println(string);
+        System.exit(1);
+    }
 }
