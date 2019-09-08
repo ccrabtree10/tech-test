@@ -1,7 +1,5 @@
 package com.crabware.techtest.databasecli;
 
-import org.mockito.stubbing.Answer;
-
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

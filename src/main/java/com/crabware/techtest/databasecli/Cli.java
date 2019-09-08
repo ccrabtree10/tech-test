@@ -18,7 +18,7 @@ public class Cli {
     private static final String PROPERTY_URL = "database.url";
     private static final String PROPERTY_USERNAME = "database.username";
     private static final String PROPERTY_PASSWORD = "database.password";
-    private static final String USAGE = "Usage: <java> " + Cli.class.getName() + " DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
+    private static final String USAGE = "Usage: <java> -jar <dbcli.jar> DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
     private final String[] args;
     private String department;
     private String payType;
@@ -130,7 +130,7 @@ public class Cli {
      */
     protected void parseArgs() {
         if (args.length < 3) {
-            throw new IllegalArgumentException("Expecting 3 arguments, only " + args.length + " supplied");
+            throw new IllegalArgumentException("Expecting 3 arguments, only " + args.length + " supplied\n" + USAGE);
         }
 
         department = args[0];
@@ -142,8 +142,4 @@ public class Cli {
         System.out.println(string);
         System.exit(1);
     }
-
-    // TODO Write list of things that I could improve
-    // TODO Write test for sql injection
-
 }
