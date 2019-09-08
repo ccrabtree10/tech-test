@@ -28,7 +28,7 @@ public class Cli {
     private String password = null;
 
     /**
-     * Instantiates a new Database cli.
+     * Instantiates a new database command line interface.
      *
      * @param args Should be 3 arguments: department id, pay type, education level
      */
@@ -85,7 +85,6 @@ public class Cli {
      * @return the properties input stream. <code>null</code> is returned if no properties file can be found
      */
     protected InputStream getPropertiesInputStream() {
-        // TODO make it possible to supply properties file as command line arg
         return ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
     }
 
