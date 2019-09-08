@@ -13,9 +13,7 @@ import java.util.Properties;
  * A command line interface to a database.
  */
 public class Cli {
-    private static final String DEFAULT_PROPERTIES_FILENAME = "databasecli.properties";
     private static final String USAGE = "Usage: <java> -jar <dbcli.jar> DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
-    private final String[] args;
     private String department;
     private String payType;
     private String educationLevel;
@@ -24,23 +22,14 @@ public class Cli {
     private String password = null;
 
     /**
-     * Instantiates a new database command line interface.
-     *
-     * @param args Should be 3 arguments: department id, pay type, education level
-     */
-    public Cli(String[] args) {
-        this.args = args;
-    }
-
-    /**
      * The entry point of the application.
      *
      * @param args Should be 3 arguments: department id, pay type, education level
      */
     public static void main(String[] args) {
-        Cli databaseCli = new Cli(args);
+        Cli databaseCli = new Cli();
         try {
-           databaseCli.run();
+           databaseCli.run(args);
         } catch (IOException ioe) {
             printAndExit("Error loading properties: " + ioe.getMessage());
         } catch (SQLException sqle) {
@@ -52,12 +41,13 @@ public class Cli {
      * Execute a query against the database to obtain a list of employees given the department id, pay type and
      * education level.
      *
-     * @throws PropertiesException if there is a problem loading the properties
-     * @throws SQLException        if there is an error while communicating with the database
+     * @param args the command line arguments
+     * @throws IOException  if there is a problem loading the properties
+     * @throws SQLException if there is an error while communicating with the database
      */
-    public void run() throws IOException, SQLException {
-        loadProperties();
-        parseArgs();
+    public void run(String[] args) throws IOException, SQLException {
+        loadProperties("databasecli.properties");
+        parseArgs(args);
 
         Database database = Database.from(url, username, password, new DriverManagerConnectionSource());
         QueryResult queryResult;
@@ -80,10 +70,10 @@ public class Cli {
      *
      * @throws IOException if the properties file cannot be found or there is an error whilst reading
      */
-    protected void loadProperties() throws IOException {
-        InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
+    protected void loadProperties(String propertiesFilename) throws IOException {
+        InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(propertiesFilename);
         if (propertiesStream == null) {
-            throw new IOException("Could not find " + DEFAULT_PROPERTIES_FILENAME + " on class path");
+            throw new IOException("Could not find properties file " + propertiesFilename + " on class path");
         } else {
             Properties properties = new Properties();
             properties.load(propertiesStream);
@@ -98,7 +88,7 @@ public class Cli {
      *
      * @throws IllegalArgumentException if not all of the required arguments are supplied
      */
-    protected void parseArgs() {
+    protected void parseArgs(String[] args) {
         if (args.length < 3) {
             throw new IllegalArgumentException("Expecting 3 arguments, only " + args.length + " supplied\n" + USAGE);
         }
