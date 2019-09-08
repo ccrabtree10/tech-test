@@ -14,10 +14,7 @@ import java.util.Properties;
  * A command line interface to a database.
  */
 public class Cli {
-    private static final String DEFAULT_PROPERTIES_FILENAME = "database.properties";
-    private static final String PROPERTY_URL = "database.url";
-    private static final String PROPERTY_USERNAME = "database.username";
-    private static final String PROPERTY_PASSWORD = "database.password";
+    private static final String DEFAULT_PROPERTIES_FILENAME = "databasecli.properties";
     private static final String USAGE = "Usage: <java> -jar <dbcli.jar> DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
     private final String[] args;
     private String department;
@@ -102,20 +99,9 @@ public class Cli {
             Properties properties = new Properties();
             try {
                 properties.load(propertiesStream);
-                url = properties.getProperty(PROPERTY_URL);
-                username = properties.getProperty(PROPERTY_USERNAME);
-                password = properties.getProperty(PROPERTY_PASSWORD);
-                if (Arrays.asList(url, username, password).contains(null)) {
-                    StringBuilder message = new StringBuilder();
-                    message.append("One of the required properties is null:\n");
-
-                    for (String prop : new String[]{PROPERTY_URL, PROPERTY_USERNAME}) {
-                        message.append(prop + "=" + properties.get(prop) + "\n");
-                    }
-
-                    message.append(PROPERTY_PASSWORD + "=" + (password == null ? password : "<removed>") + "\n");
-                    throw new PropertiesException(message.toString());
-                }
+                url = properties.getProperty("database.url");
+                username = properties.getProperty("database.username");
+                password = properties.getProperty("database.password");
             } catch (IOException e) {
                 throw new PropertiesException("Couldn't read from properties file " + DEFAULT_PROPERTIES_FILENAME + ": " + e.getMessage(), e);
             }
