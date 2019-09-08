@@ -29,7 +29,9 @@ public class Cli {
     public static void main(String[] args) {
         Cli databaseCli = new Cli();
         try {
-           databaseCli.run(args);
+            databaseCli.loadProperties("databasecli.properties");
+            databaseCli.parseArgs(args);
+            databaseCli.run();
         } catch (IOException ioe) {
             printAndExit("Error loading properties: " + ioe.getMessage());
         } catch (SQLException sqle) {
@@ -41,14 +43,9 @@ public class Cli {
      * Execute a query against the database to obtain a list of employees given the department id, pay type and
      * education level.
      *
-     * @param args the command line arguments
-     * @throws IOException  if there is a problem loading the properties
      * @throws SQLException if there is an error while communicating with the database
      */
-    public void run(String[] args) throws IOException, SQLException {
-        loadProperties("databasecli.properties");
-        parseArgs(args);
-
+    public void run() throws SQLException {
         Database database = Database.from(url, username, password, new DriverManagerConnectionSource());
         QueryResult queryResult;
 
@@ -70,7 +67,7 @@ public class Cli {
      *
      * @throws IOException if the properties file cannot be found or there is an error whilst reading
      */
-    protected void loadProperties(String propertiesFilename) throws IOException {
+    public void loadProperties(String propertiesFilename) throws IOException {
         InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(propertiesFilename);
         if (propertiesStream == null) {
             throw new IOException("Could not find properties file " + propertiesFilename + " on class path");
@@ -88,7 +85,7 @@ public class Cli {
      *
      * @throws IllegalArgumentException if not all of the required arguments are supplied
      */
-    protected void parseArgs(String[] args) {
+    public void parseArgs(String[] args) {
         if (args.length < 3) {
             throw new IllegalArgumentException("Expecting 3 arguments, only " + args.length + " supplied\n" + USAGE);
         }
