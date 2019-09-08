@@ -7,6 +7,7 @@ import com.crabware.techtest.databasecli.util.QueryResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -14,6 +15,9 @@ import java.util.Properties;
  */
 public class Cli {
     private static final String USAGE = "Usage: <java> -jar <dbcli.jar> DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
+    private static final String PROPERTY_URL = "database.url";
+    private static final String PROPERTY_USERNAME = "database.username";
+    private static final String PROPERTY_PASSWORD = "database.password";
     private String department;
     private String payType;
     private String educationLevel;
@@ -32,7 +36,7 @@ public class Cli {
             databaseCli.loadProperties("databasecli.properties");
             databaseCli.parseArgs(args);
             databaseCli.run();
-        } catch (IOException ioe) {
+        } catch (PropertiesException ioe) {
             printAndExit("Error loading properties: " + ioe.getMessage());
         } catch (SQLException sqle) {
             printAndExit("Database error: " + sqle.getMessage());
@@ -65,18 +69,37 @@ public class Cli {
     /**
      * Load the properties and extract the database url, username and password.
      *
-     * @throws IOException if the properties file cannot be found or there is an error whilst reading
+     * @throws PropertiesException if the properties file cannot be found, there is an error whilst reading, or a
+     * required property is missing
      */
-    public void loadProperties(String propertiesFilename) throws IOException {
+    public void loadProperties(String propertiesFilename) throws PropertiesException {
         InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(propertiesFilename);
         if (propertiesStream == null) {
-            throw new IOException("Could not find properties file " + propertiesFilename + " on class path");
+            throw new PropertiesException("Could not find properties file " + propertiesFilename + " on class path");
         } else {
             Properties properties = new Properties();
-            properties.load(propertiesStream);
-            url = properties.getProperty("database.url");
-            username = properties.getProperty("database.username");
-            password = properties.getProperty("database.password");
+
+            try {
+                properties.load(propertiesStream);
+            } catch (IOException ioe) {
+                throw new PropertiesException("Could not load the properties from file " + propertiesFilename);
+            }
+
+            url = properties.getProperty(PROPERTY_URL);
+            username = properties.getProperty(PROPERTY_USERNAME);
+            password = properties.getProperty(PROPERTY_PASSWORD);
+
+            if (Arrays.asList(url, username, password).contains(null)) {
+                StringBuilder message = new StringBuilder();
+                message.append("One of the required properties is null:\n");
+
+                for (String prop : new String[]{PROPERTY_URL, PROPERTY_USERNAME}) {
+                    message.append(prop + "=" + properties.get(prop) + "\n");
+                }
+
+                message.append(PROPERTY_PASSWORD + "=" + (password == null ? password : "<removed>") + "\n");
+                throw new PropertiesException(message.toString());
+            }
         }
     }
 
