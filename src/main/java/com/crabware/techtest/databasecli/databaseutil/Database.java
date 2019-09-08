@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Represents a database, intended to be easier to use than directly interacting with JDBC classes.
+ * Represents a database, intended to be easier than directly interacting with JDBC classes.
  */
 public class Database {
     private final String url;
@@ -14,11 +14,35 @@ public class Database {
     private final ConnectionSource connectionSource;
     private Connection connection = null;
 
+    private static final String EMPLOYEES_QUERY = "SELECT * " +
+            "FROM foodmart.employee e " +
+            "    INNER JOIN foodmart.department d " +
+            "        on d.department_id = e.department_id " +
+            "    INNER JOIN foodmart.position p " +
+            "        on p.position_id = e.position_id " +
+            "WHERE " +
+            "    d.department_id = ? " +
+            "    AND p.pay_type = ? " +
+            "    AND e.education_level = ? ";
+
     private Database(String url, String username, String password, ConnectionSource connectionSource) {
         this.url = url;
         this.username = username;
         this.password = password;
         this.connectionSource = connectionSource;
+    }
+
+    /**
+     * From database.
+     *
+     * @param url              the url
+     * @param username         the username
+     * @param password         the password
+     * @param connectionSource the connection source
+     * @return the database
+     */
+    public static Database from(String url, String username, String password, ConnectionSource connectionSource) {
+        return new Database(url, username, password, connectionSource);
     }
 
     /**
@@ -52,33 +76,30 @@ public class Database {
      * @throws SQLException the sql exception
      */
     public QueryResult executeStatement(String query, String[] params) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement(query);
+        PreparedStatement statement = connection.prepareStatement(query);
         for (int i = 0; i < params.length; i++) {
-            stmt.setString(i + 1, params[i]);
+            statement.setString(i + 1, params[i]);
         }
 
         QueryResult queryResult = null;
         try {
-            stmt.execute();
+            statement.execute();
             // Build the query result before we close the statement otherwise getResultSet will throw an exception
-            queryResult = QueryResult.from(stmt.getResultSet());
+            queryResult = QueryResult.from(statement.getResultSet());
         } finally {
-            stmt.close();
+            statement.close();
         }
         return queryResult;
     }
 
-
-    /**
-     * From database.
-     *
-     * @param url              the url
-     * @param username         the username
-     * @param password         the password
-     * @param connectionSource the connection source
-     * @return the database
-     */
-    public static Database from(String url, String username, String password, ConnectionSource connectionSource) {
-        return new Database(url, username, password, connectionSource);
+    public QueryResult getEmployees(String department, String payType, String educationLevel) throws SQLException {
+        if (department == null || payType == null || educationLevel == null) {
+            String args = "department=" + department + ", payType=" + payType + ", educationLevel=" + educationLevel;
+            throw new IllegalArgumentException("Arguments must not be null, supplied arguments: " + args);
+        }
+        String[] params = new String[]{department, payType, educationLevel};
+        return executeStatement(EMPLOYEES_QUERY, params);
     }
+
+
 }

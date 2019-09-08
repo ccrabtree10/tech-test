@@ -2,10 +2,8 @@ package com.crabware.techtest.databasecli;
 
 import com.crabware.techtest.databasecli.databaseutil.Database;
 import com.crabware.techtest.databasecli.databaseutil.DriverManagerConnectionSource;
-import com.crabware.techtest.databasecli.databaseutil.FoodMartHelper;
 import com.crabware.techtest.databasecli.databaseutil.QueryResult;
 import com.crabware.techtest.databasecli.display.DisplayHelper;
-import com.crabware.techtest.databasecli.exceptions.ArgumentException;
 import com.crabware.techtest.databasecli.exceptions.PropertiesException;
 
 import java.io.IOException;
@@ -31,7 +29,6 @@ public class DatabaseCli {
     private String username = null;
     private String password = null;
 
-
     /**
      * Instantiates a new Database cli.
      *
@@ -52,8 +49,6 @@ public class DatabaseCli {
            databaseCli.run();
         } catch (PropertiesException pe) {
             printAndExit("Error loading properties: " + pe.getMessage());
-        } catch (ArgumentException ae) {
-            printAndExit("Error parsing arguments: " + ae.getMessage() + System.lineSeparator() + USAGE);
         } catch (SQLException sqle) {
             printAndExit("Database error: " + sqle.getMessage());
         }
@@ -63,20 +58,18 @@ public class DatabaseCli {
      * Execute the program.
      *
      * @throws PropertiesException if there is a problem loading the properties
-     * @throws ArgumentException   if the arguments passed in are invalid
      * @throws SQLException        if there is an error while communicating with the database
      */
-    public void run() throws PropertiesException, ArgumentException, SQLException {
+    public void run() throws PropertiesException, SQLException {
         loadProperties();
         parseArgs();
 
         Database database = Database.from(url, username, password, new DriverManagerConnectionSource());
-        FoodMartHelper foodMartHelper = FoodMartHelper.from(database);
         QueryResult queryResult = null;
 
         try {
             database.connect();
-            queryResult = foodMartHelper.getEmployees(department, payType, educationLevel);
+            queryResult = database.getEmployees(department, payType, educationLevel);
         } finally {
             database.disconnect();
         }
@@ -115,9 +108,9 @@ public class DatabaseCli {
         }
     }
 
-    private void parseArgs() throws ArgumentException {
+    private void parseArgs() {
         if (args.length < 3) {
-            throw new ArgumentException("Expecting 3 arguments, only " + args.length + " supplied");
+            throw new IllegalArgumentException("Expecting 3 arguments, only " + args.length + " supplied");
         }
 
         department = args[0];

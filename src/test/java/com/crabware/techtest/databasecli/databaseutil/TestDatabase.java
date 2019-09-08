@@ -12,7 +12,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestFoodMartHelper {
+public class TestDatabase {
     @Test
     public void getEmployeesReturnsResultQuery() throws SQLException {
         String[] columnNames = new String[]{"name", "age", "weight"};
@@ -32,19 +32,14 @@ public class TestFoodMartHelper {
 
         Database db = Database.from("url", "user", "pass", connectionSource);
         db.connect();
+        QueryResult queryResult = db.getEmployees("department", "payType", "educationLevel");
 
-        FoodMartHelper helper = FoodMartHelper.from(db);
-        String department = "";
-        String payType = "";
-        String educationLevel = "";
-        QueryResult queryResult = helper.getEmployees(department, payType, educationLevel);
         assertEquals(new HashSet<>(Arrays.asList("name", "age", "weight")), queryResult.getHeaders());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullStringsNowAllowed() throws SQLException {
         Database database = Database.from("url", "usermame", "password", new DriverManagerConnectionSource());
-        FoodMartHelper helper = FoodMartHelper.from(database);
-        helper.getEmployees("department id", "pay type", null);
+        database.getEmployees("department id", "pay type", null);
     }
 }
