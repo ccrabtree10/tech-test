@@ -6,7 +6,7 @@ import com.crabware.techtest.databasecli.util.QueryResult;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
 
