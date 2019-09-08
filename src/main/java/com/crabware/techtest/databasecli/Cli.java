@@ -7,7 +7,6 @@ import com.crabware.techtest.databasecli.util.QueryResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -42,8 +41,8 @@ public class Cli {
         Cli databaseCli = new Cli(args);
         try {
            databaseCli.run();
-        } catch (PropertiesException pe) {
-            printAndExit("Error loading properties: " + pe.getMessage());
+        } catch (IOException ioe) {
+            printAndExit("Error loading properties: " + ioe.getMessage());
         } catch (SQLException sqle) {
             printAndExit("Database error: " + sqle.getMessage());
         }
@@ -56,7 +55,7 @@ public class Cli {
      * @throws PropertiesException if there is a problem loading the properties
      * @throws SQLException        if there is an error while communicating with the database
      */
-    public void run() throws PropertiesException, SQLException {
+    public void run() throws IOException, SQLException {
         loadProperties();
         parseArgs();
 
@@ -77,34 +76,20 @@ public class Cli {
     }
 
     /**
-     * Attempts to get the properties as an input stream.
-     *
-     * @return the properties input stream. <code>null</code> is returned if no properties file can be found
-     */
-    protected InputStream getPropertiesInputStream() {
-        return ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
-    }
-
-    /**
      * Load the properties and extract the database url, username and password.
      *
-     * @throws PropertiesException if a required property is missing, the properties file does not exist, or there is
-     * an error whilst reading from the properties file
+     * @throws IOException if the properties file cannot be found or there is an error whilst reading
      */
-    protected void loadProperties() throws PropertiesException {
-        InputStream propertiesStream = getPropertiesInputStream();
+    protected void loadProperties() throws IOException {
+        InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
         if (propertiesStream == null) {
-            throw new PropertiesException("Could not find " + DEFAULT_PROPERTIES_FILENAME + " on class path");
+            throw new IOException("Could not find " + DEFAULT_PROPERTIES_FILENAME + " on class path");
         } else {
             Properties properties = new Properties();
-            try {
-                properties.load(propertiesStream);
-                url = properties.getProperty("database.url");
-                username = properties.getProperty("database.username");
-                password = properties.getProperty("database.password");
-            } catch (IOException e) {
-                throw new PropertiesException("Couldn't read from properties file " + DEFAULT_PROPERTIES_FILENAME + ": " + e.getMessage(), e);
-            }
+            properties.load(propertiesStream);
+            url = properties.getProperty("database.url");
+            username = properties.getProperty("database.username");
+            password = properties.getProperty("database.password");
         }
     }
 
