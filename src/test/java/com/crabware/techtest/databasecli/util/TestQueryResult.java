@@ -1,4 +1,4 @@
-package com.crabware.techtest.databasecli.databaseutil;
+package com.crabware.techtest.databasecli.util;
 
 import com.crabware.techtest.databasecli.ResultSetMock;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class TestQueryResult {
         ResultSet resultSet = ResultSetMock.create(columnNames, data);
         QueryResult queryResult = QueryResult.from(resultSet);
         List<Map<String, String>> rows = queryResult.getRows();
-        assertEquals(new HashSet<String>(Arrays.asList("food", "tastiness", "colour")), queryResult.getHeaders());
+        assertEquals(new HashSet<String>(Arrays.asList("food", "tastiness", "colour")), queryResult.getColumnNames());
         assertEquals(11, queryResult.getColumnWidth("food"));
         assertEquals(9, queryResult.getColumnWidth("tastiness"));
         assertEquals(6, queryResult.getColumnWidth("colour"));

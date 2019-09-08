@@ -1,4 +1,4 @@
-package com.crabware.techtest.databasecli.databaseutil;
+package com.crabware.techtest.databasecli.util;
 
 import com.crabware.techtest.databasecli.ResultSetMock;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class TestDatabase {
         db.connect();
         QueryResult queryResult = db.getEmployees("department", "payType", "educationLevel");
 
-        assertEquals(new HashSet<>(Arrays.asList("name", "age", "weight")), queryResult.getHeaders());
+        assertEquals(new HashSet<>(Arrays.asList("name", "age", "weight")), queryResult.getColumnNames());
     }
 
     @Test(expected = IllegalArgumentException.class)

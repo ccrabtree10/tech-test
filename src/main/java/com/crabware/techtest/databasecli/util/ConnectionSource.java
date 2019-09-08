@@ -1,4 +1,4 @@
-package com.crabware.techtest.databasecli.databaseutil;
+package com.crabware.techtest.databasecli.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;

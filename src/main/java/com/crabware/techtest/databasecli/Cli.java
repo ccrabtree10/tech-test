@@ -1,10 +1,8 @@
 package com.crabware.techtest.databasecli;
 
-import com.crabware.techtest.databasecli.databaseutil.Database;
-import com.crabware.techtest.databasecli.databaseutil.DriverManagerConnectionSource;
-import com.crabware.techtest.databasecli.databaseutil.QueryResult;
-import com.crabware.techtest.databasecli.display.DisplayHelper;
-import com.crabware.techtest.databasecli.exceptions.PropertiesException;
+import com.crabware.techtest.databasecli.util.Database;
+import com.crabware.techtest.databasecli.util.DriverManagerConnectionSource;
+import com.crabware.techtest.databasecli.util.QueryResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +11,14 @@ import java.util.Arrays;
 import java.util.Properties;
 
 /**
- * The type Database cli.
+ * A command line interface to a database.
  */
-public class DatabaseCli {
+public class Cli {
     private static final String DEFAULT_PROPERTIES_FILENAME = "database.properties";
     private static final String PROPERTY_URL = "database.url";
     private static final String PROPERTY_USERNAME = "database.username";
     private static final String PROPERTY_PASSWORD = "database.password";
-    private static final String USAGE = "Usage: <java> " + DatabaseCli.class.getName() + " DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
+    private static final String USAGE = "Usage: <java> " + Cli.class.getName() + " DEPARTMENT PAY_TYPE EDUCATION_LEVEL";
     private final String[] args;
     private String department;
     private String payType;
@@ -32,19 +30,19 @@ public class DatabaseCli {
     /**
      * Instantiates a new Database cli.
      *
-     * @param args Should be 3 arguments: department, pay type, education level
+     * @param args Should be 3 arguments: department id, pay type, education level
      */
-    public DatabaseCli(String[] args) {
+    public Cli(String[] args) {
         this.args = args;
     }
 
     /**
      * The entry point of the application.
      *
-     * @param args Should be 3 arguments: department, pay type, education level
+     * @param args Should be 3 arguments: department id, pay type, education level
      */
     public static void main(String[] args) {
-        DatabaseCli databaseCli = new DatabaseCli(args);
+        Cli databaseCli = new Cli(args);
         try {
            databaseCli.run();
         } catch (PropertiesException pe) {
@@ -55,7 +53,8 @@ public class DatabaseCli {
     }
 
     /**
-     * Execute the program.
+     * Execute a query against the database to obtain a list of employees given the department id, pay type and
+     * education level.
      *
      * @throws PropertiesException if there is a problem loading the properties
      * @throws SQLException        if there is an error while communicating with the database
@@ -65,7 +64,7 @@ public class DatabaseCli {
         parseArgs();
 
         Database database = Database.from(url, username, password, new DriverManagerConnectionSource());
-        QueryResult queryResult = null;
+        QueryResult queryResult;
 
         try {
             database.connect();
@@ -80,8 +79,24 @@ public class DatabaseCli {
         }
     }
 
-    private void loadProperties() throws PropertiesException {
-        InputStream propertiesStream = ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
+    /**
+     * Attempts to get the properties as an input stream.
+     *
+     * @return the properties input stream. <code>null</code> is returned if no properties file can be found
+     */
+    protected InputStream getPropertiesInputStream() {
+        // TODO make it possible to supply properties file as command line arg
+        return ClassLoader.getSystemResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
+    }
+
+    /**
+     * Load the properties and extract the database url, username and password.
+     *
+     * @throws PropertiesException if a required property is missing, the properties file does not exist, or there is
+     * an error whilst reading from the properties file
+     */
+    protected void loadProperties() throws PropertiesException {
+        InputStream propertiesStream = getPropertiesInputStream();
         if (propertiesStream == null) {
             throw new PropertiesException("Could not find " + DEFAULT_PROPERTIES_FILENAME + " on class path");
         } else {
@@ -108,7 +123,12 @@ public class DatabaseCli {
         }
     }
 
-    private void parseArgs() {
+    /**
+     * Parse the command line arguments.
+     *
+     * @throws IllegalArgumentException if not all of the required arguments are supplied
+     */
+    protected void parseArgs() {
         if (args.length < 3) {
             throw new IllegalArgumentException("Expecting 3 arguments, only " + args.length + " supplied");
         }
@@ -122,4 +142,8 @@ public class DatabaseCli {
         System.out.println(string);
         System.exit(1);
     }
+
+    // TODO Write list of things that I could improve
+    // TODO Write test for sql injection
+
 }

@@ -1,11 +1,11 @@
-package com.crabware.techtest.databasecli.databaseutil;
+package com.crabware.techtest.databasecli.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Represents a database, intended to be easier than directly interacting with JDBC classes.
+ * Represents a database, intended to be easier than interacting directly with JDBC classes.
  */
 public class Database {
     private final String url;
@@ -33,7 +33,7 @@ public class Database {
     }
 
     /**
-     * From database.
+     * Construct a database from the given parameters.
      *
      * @param url              the url
      * @param username         the username
@@ -68,12 +68,13 @@ public class Database {
     }
 
     /**
-     * Execute statement query result.
+     * Execute a statement against the database. If the statement is parameterised, populate with the supplied
+     * <code>params</code>.
      *
-     * @param query  the query
-     * @param params the params
+     * @param query  the SQL query
+     * @param params the params (should be empty if query has no parameters)
      * @return the query result
-     * @throws SQLException the sql exception
+     * @throws SQLException if there is an error whilst executing the query
      */
     public QueryResult executeStatement(String query, String[] params) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(query);
@@ -92,12 +93,21 @@ public class Database {
         return queryResult;
     }
 
-    public QueryResult getEmployees(String department, String payType, String educationLevel) throws SQLException {
-        if (department == null || payType == null || educationLevel == null) {
-            String args = "department=" + department + ", payType=" + payType + ", educationLevel=" + educationLevel;
+    /**
+     * Gets a list of employees for the given department id, pay type and education level.
+     *
+     * @param departmentId     the department id
+     * @param payType          the pay type
+     * @param educationLevel   the education level
+     * @return the employees
+     * @throws SQLException if an exception occurs whilst executing the statement to get employees
+     */
+    public QueryResult getEmployees(String departmentId, String payType, String educationLevel) throws SQLException {
+        if (departmentId == null || payType == null || educationLevel == null) {
+            String args = "departmentId=" + departmentId + ", payType=" + payType + ", educationLevel=" + educationLevel;
             throw new IllegalArgumentException("Arguments must not be null, supplied arguments: " + args);
         }
-        String[] params = new String[]{department, payType, educationLevel};
+        String[] params = new String[]{departmentId, payType, educationLevel};
         return executeStatement(EMPLOYEES_QUERY, params);
     }
 

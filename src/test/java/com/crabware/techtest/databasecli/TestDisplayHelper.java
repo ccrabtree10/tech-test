@@ -1,7 +1,6 @@
-package com.crabware.techtest.databasecli.display;
+package com.crabware.techtest.databasecli;
 
-import com.crabware.techtest.databasecli.ResultSetMock;
-import com.crabware.techtest.databasecli.databaseutil.QueryResult;
+import com.crabware.techtest.databasecli.util.QueryResult;
 import org.junit.Test;
 
 import java.sql.ResultSet;
