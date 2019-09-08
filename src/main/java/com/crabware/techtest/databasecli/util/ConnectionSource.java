@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * A source of JDBC connections.
+ * A source of JDBC connections. The purpose of this interface is to make unit-testing easier.
  */
 public interface ConnectionSource {
     /**
