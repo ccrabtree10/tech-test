@@ -13,15 +13,22 @@ repositories {
 
 task databaseCliJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'com.crabware.techtest.databasecli.DatabaseCli'
+        attributes 'Main-Class': 'com.crabware.techtest.databasecli.Cli'
     }
     baseName = 'dbcli'
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    from {configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
+
+    from(sourceSets.main.output) {include "com/crabware/techtest/databasecli/**"}
+
+    from('src/main/resources') {include '**'}
+}
+
+task hammingDistanceJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.crabware.techtest.stringanalysis.HammingDistance'
     }
-    from(sourceSets.main.output) {
-        include "com/crabware/techtest/databasecli/**"
-    }
+    baseName = 'hammingDistance'
+    from(sourceSets.main.output) {include "com/crabware/techtest/stringanalysis/**"}
 }
 
 dependencies {

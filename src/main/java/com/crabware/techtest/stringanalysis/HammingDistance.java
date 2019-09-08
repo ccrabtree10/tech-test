@@ -1,8 +1,8 @@
 package com.crabware.techtest.stringanalysis;
 
-public class StringAnalysis {
+public class HammingDistance {
 
-    private StringAnalysis() {}
+    private HammingDistance() {}
 
     public static void main(String[] args) {
         if (args.length < 2) {
