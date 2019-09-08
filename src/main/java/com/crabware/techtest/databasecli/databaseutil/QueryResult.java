@@ -1,4 +1,4 @@
-package com.crabware.techtest.databasecli.database;
+package com.crabware.techtest.databasecli.databaseutil;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

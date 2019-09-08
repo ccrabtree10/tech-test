@@ -1,4 +1,4 @@
-package com.crabware.techtest.databasecli.database;
+package com.crabware.techtest.databasecli.databaseutil;
 
 import com.crabware.techtest.databasecli.ResultSetMock;
 import org.junit.Test;

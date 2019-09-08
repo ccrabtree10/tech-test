@@ -1,7 +1,7 @@
 package com.crabware.techtest.databasecli.display;
 
 import com.crabware.techtest.databasecli.ResultSetMock;
-import com.crabware.techtest.databasecli.database.QueryResult;
+import com.crabware.techtest.databasecli.databaseutil.QueryResult;
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -9,11 +9,11 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestDisplay {
+public class TestDisplayHelper {
 
     @Test
     public void correctPaddingAddedToString() {
-        assertEquals("123  ", Display.rightPad("123", 5));
+        assertEquals("123  ", DisplayHelper.rightPad("123", 5));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class TestDisplay {
         ResultSet resultSet = ResultSetMock.create(columnNames, data);
         QueryResult queryResult = QueryResult.from(resultSet);
 
-        String rendered = Display.render(queryResult, columnNames);
+        String rendered = DisplayHelper.render(queryResult, columnNames);
         String[] split = rendered.split(System.lineSeparator());
         assertEquals("name            age  weight  ", split[0]);
         assertEquals("John Bon        34   78      ", split[1]);

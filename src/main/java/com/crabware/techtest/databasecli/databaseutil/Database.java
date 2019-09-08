@@ -1,4 +1,4 @@
-package com.crabware.techtest.databasecli.database;
+package com.crabware.techtest.databasecli.databaseutil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

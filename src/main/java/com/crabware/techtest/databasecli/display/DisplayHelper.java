@@ -1,12 +1,12 @@
 package com.crabware.techtest.databasecli.display;
 
-import com.crabware.techtest.databasecli.database.QueryResult;
+import com.crabware.techtest.databasecli.databaseutil.QueryResult;
 import java.util.*;
 
-public class Display {
+public class DisplayHelper {
     private static final int PADDING = 2;
 
-    private Display() {}
+    private DisplayHelper() {}
 
     public static String render(QueryResult queryResult, String[] orderedHeaders) {
         StringBuilder output = new StringBuilder();

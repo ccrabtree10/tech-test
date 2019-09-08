@@ -1,10 +1,10 @@
 package com.crabware.techtest.databasecli;
 
-import com.crabware.techtest.databasecli.database.Database;
-import com.crabware.techtest.databasecli.database.DriverManagerConnectionSource;
-import com.crabware.techtest.databasecli.database.FoodMartHelper;
-import com.crabware.techtest.databasecli.database.QueryResult;
-import com.crabware.techtest.databasecli.display.Display;
+import com.crabware.techtest.databasecli.databaseutil.Database;
+import com.crabware.techtest.databasecli.databaseutil.DriverManagerConnectionSource;
+import com.crabware.techtest.databasecli.databaseutil.FoodMartHelper;
+import com.crabware.techtest.databasecli.databaseutil.QueryResult;
+import com.crabware.techtest.databasecli.display.DisplayHelper;
 import com.crabware.techtest.databasecli.exceptions.ArgumentException;
 import com.crabware.techtest.databasecli.exceptions.PropertiesException;
 
@@ -83,7 +83,7 @@ public class DatabaseCli {
 
         if (queryResult != null) {
             System.out.println("Employees:");
-            System.out.println(Display.render(queryResult));
+            System.out.println(DisplayHelper.render(queryResult));
         }
     }
 
