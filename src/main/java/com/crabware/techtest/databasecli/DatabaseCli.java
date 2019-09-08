@@ -14,6 +14,9 @@ import java.sql.*;
 import java.util.Arrays;
 import java.util.Properties;
 
+/**
+ * The type Database cli.
+ */
 public class DatabaseCli {
     private static final String DEFAULT_PROPERTIES_FILENAME = "database.properties";
     private static final String PROPERTY_URL = "database.url";
@@ -28,39 +31,54 @@ public class DatabaseCli {
     private String username = null;
     private String password = null;
 
+
+    /**
+     * Instantiates a new Database cli.
+     *
+     * @param args Should be 3 arguments: department, pay type, education level
+     */
     public DatabaseCli(String[] args) {
         this.args = args;
     }
 
+    /**
+     * The entry point of the application.
+     *
+     * @param args Should be 3 arguments: department, pay type, education level
+     */
     public static void main(String[] args) {
         DatabaseCli databaseCli = new DatabaseCli(args);
-        databaseCli.run();
-    }
-
-    public void run() {
         try {
-            loadProperties();
-            parseArgs();
+           databaseCli.run();
         } catch (PropertiesException pe) {
             printAndExit("Error loading properties: " + pe.getMessage());
         } catch (ArgumentException ae) {
             printAndExit("Error parsing arguments: " + ae.getMessage() + System.lineSeparator() + USAGE);
+        } catch (SQLException sqle) {
+            printAndExit("Database error: " + sqle.getMessage());
         }
+    }
+
+    /**
+     * Execute the program.
+     *
+     * @throws PropertiesException if there is a problem loading the properties
+     * @throws ArgumentException   if the arguments passed in are invalid
+     * @throws SQLException        if there is an error while communicating with the database
+     */
+    public void run() throws PropertiesException, ArgumentException, SQLException {
+        loadProperties();
+        parseArgs();
 
         Database database = Database.from(url, username, password, new DriverManagerConnectionSource());
         FoodMartHelper foodMartHelper = FoodMartHelper.from(database);
         QueryResult queryResult = null;
+
         try {
             database.connect();
             queryResult = foodMartHelper.getEmployees(department, payType, educationLevel);
-        } catch (SQLException sqle) {
-            printAndExit("Database error: " + sqle.getMessage());
         } finally {
-            try {
-                database.disconnect();
-            } catch (SQLException e) {
-                System.out.println("Database error while disconnecting: " + e.getMessage());
-            }
+            database.disconnect();
         }
 
         if (queryResult != null) {
