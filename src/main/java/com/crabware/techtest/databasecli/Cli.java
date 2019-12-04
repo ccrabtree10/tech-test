@@ -126,4 +126,8 @@ public class Cli {
     public void doSomething(String a) {
         String b;
     }
+
+    public void doSomethingElse(String a) {
+        String b;
+    }
 }
