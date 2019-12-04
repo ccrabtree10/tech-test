@@ -122,4 +122,8 @@ public class Cli {
         System.out.println(string);
         System.exit(1);
     }
+
+    public void doSomething(String a) {
+        String b;
+    }
 }
