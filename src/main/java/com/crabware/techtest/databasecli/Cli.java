@@ -60,10 +60,17 @@ public class Cli {
             database.disconnect();
         }
 
+
+
         if (queryResult != null) {
             System.out.println("Employees:");
             System.out.println(DisplayHelper.render(queryResult));
         }
+
+
+
+
+        throw new SQLException();
     }
 
     /**
